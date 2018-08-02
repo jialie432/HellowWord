@@ -1,0 +1,136 @@
+goal:
+1. able to rapic prototype
+2. one command deploy
+3.
+
+
+REST
+DB
+SSE
+	
+
+task:
+1. serverless java, 
+https://github.com/rupakg/aws-java-products-api
+#design, 
+public class GetProductHandler implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
+	public ApiGatewayResponse handleRequest(Map<String,Object> input, Context context) {
+	
+	}
+public class CreateProductHandler implements RequestHandler<Map<String, Object>, ApiGatewayResponse> {
+	public ApiGatewayResponse handleRequest(Map<String, Object> input, Context context) {
+	1. get value from input:
+		
+	
+#api 
+#POST
+#get json value from reques body:
+String body = (String)input.get("body");
+JsonNode body = new ObjectMapper().readTree(body);
+String name=body.get("name").asText();
+...
+return ApiGatewayResponse.build()
+	.setStatusCode(200);
+	.setObjectBody(product);
+	.setHeaders(Collections.singletonMap("Access-Control-Allow-Origin", "*"))
+	.build();
+	
+#GET
+get value from pathparameters:
+Map<String,String> pathParameters =  (Map<String,String>)input.get("pathParameters");
+String productId = pathParameters.get("id");
+
+#build, 
+#deploy,
+yaml:
+1.define table name:
+ custom:
+  productsTableName: 'java-products-${self:provider.stage}'
+2. refer table name: self
+ environment:
+    PRODUCTS_TABLE_NAME: ${self:custom.productsTableName}
+3. define Dynamo table resource:
+	Resources:
+		Type:AWS::DynamoDB::Table
+		properties:
+			TableName:${self:custom.productsTableName}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: name
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+          - AttributeName: name
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+4. define Fucnionts:
+	listProducts:
+		handler: com.serverless.ListProductHandler
+		events:
+			- http:
+				path: /products
+				method: get
+				cors: true
+	getProduct:
+		    handler: com.serverless.GetProductHandler
+    events:
+      - http:
+          path: /products/{id} //id passed to handler
+          method: get
+          cors: true
+ 5. define provider and IAM
+	provider:
+		name: aws
+		runtime: java8
+		iamRoleStatements:
+			- Effect: Allow
+			  Action: 
+				- dynamodb: Query
+				- dynamodb: Scan
+				- dynamodb: getItem
+			Resource:
+				- { "Fn::GetAtt" : ["ProdcutsDynamoDBTable", "Arn"] }
+		 environment:
+			PRODUCTS_TABLE_ANME: ${swlf:custom.productsTableName}
+			
+#unit test: deploy first, table will be created. otherwise, manul create table.
+1. create handler:
+GetProductHandler handler = new GetProductHandler();
+2. create context
+Context ctx = new TestContext();
+3. create input
+Map<String,String> idMap = new HashMap<>();
+idMap.put("id", "1448fd33-9baa-48b7-a1c3-70812e4ab180");
+input.put("pathParameters", idMap);
+4. invoke:
+ApiGatewayResponse  response = handler.handleRequest(input, ctx);
+System.out.println(response);
+#test2: createProductHandlerTest
+	Map<String, String> idMap = new HashMap<>();
+	String json = "{\"name\": \"Product1\", \"price\": 9.99}";
+	input.put("body", json);
+#Integration test:
+curl -X POST https://b1i93b7wt0.execute-api.us-east-1.amazonaws.com/dev/products -d '{"name": "Product3", "price": 100.99}'
+	
+		
+#config, 
+define in yaml:
+environment:
+    PRODUCTS_TABLE_NAME: ${self:custom.productsTableName}
+in code:
+// get the table name from env. var. set in serverless.yml
+    private static final String PRODUCTS_TABLE_NAME = System.getenv("PRODUCTS_TABLE_NAME");
+
+	
+#logging, 
+private final Logger logger = Logger.getLogger(this.getClass());
+
+#monitoring,
+#troubleshooting
+
+	
+	
