@@ -5,12 +5,13 @@ X# download stock data: sh, ss
 X# autoload to Database
 
 2. calculation
-# read data from DB 
+X# read data from DB Mysql
 # calculation
 # store calculation result (DynamoDB)
 
 3. display,
 # read result
+# create backend service
 # UI display data table
 # UI display graph
 
@@ -18,7 +19,7 @@ X# autoload to Database
 ###Auto data collection:
 
 
-
+https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-centos-7
 mvn archetype:generate -DgroupId=com.data.autocollection -DartifactId=mysqlload -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
 
 mvn exec:java -Dexec.mainClass="com.data.autocollection.ImportCSV" -Dexec.cleanupDaemonThreads=false

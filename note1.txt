@@ -1,0 +1,81 @@
+	private static void readCsvUsingLoad() {
+		try (Connection connection = getConnection()) {
+
+			String loadQuery = "LOAD DATA LOCAL INFILE '" + "/root/mysqlload/stock.csv"
+					+ "' INTO TABLE txn_tbl FIELDS TERMINATED BY ','"
+					+ " LINES TERMINATED BY '\n' (txn_amount, card_number, terminal_id) ";
+			System.out.println(loadQuery);
+			Statement stmt = connection.createStatement();
+			stmt.execute(loadQuery);
+			connection.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+	}
+	https://examples.javacodegeeks.com/core-java/sql/import-csv-file-to-mysql-table-java-example/
+	
+	public class StockDownloadJob implements Job {
+	private static Logger LOG = LoggerFactory.getLogger(StockDownloadJob.class);
+	static String tickerFile;// full path with filename
+	static String startDate;
+	static String endDate;
+	static String outputLocation;
+	static String stockExchange;
+	
+	public StockDownloadJob() {
+		init();
+		LOG.info("starting date="+ startDate);
+	}
+
+	
+	public void execute(JobExecutionContext context) throws JobExecutionException {
+		
+		JobKey jobKey = context.getJobDetail().getKey();
+		LOG.info("XXXXXXXXXXXXXXXXXXXXStockDownload Jobs says: " + jobKey + " executing at " + new Date());
+		
+	}
+	public class StockAutoCollection {
+	static String cronScheduler;
+
+	public StockAutoCollection() {
+		Properties prop = new Properties();
+
+		try (InputStream input = this.getClass().getClassLoader().getResourceAsStream("schedule.properties")) {
+			prop.load(input);
+			cronScheduler = prop.getProperty("stockdownload_schedule");
+			IOUtils.closeQuietly(input);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public void run() {
+		Logger log = LoggerFactory.getLogger(StockAutoCollection.class);
+		try {
+			SchedulerFactory sf = new StdSchedulerFactory();
+			Scheduler sched = sf.getScheduler();
+
+			JobDetail job = newJob(StockDownloadJob.class)
+					.withIdentity("StockAutoCollectionJob", "group1")
+					.build();
+			// job run at 14:00 MON-Fri "0 0 14 ? * MON-FRI"
+			CronTrigger trigger = newTrigger()
+					.withIdentity("stockdownloadtrigger", "group1")
+					.withSchedule(cronSchedule(cronScheduler)).build();
+
+			Date ft = sched.scheduleJob(job, trigger);
+			log.info(job.getKey() + " has been scheduled to run at: " + ft + " and repeat based on expression: "
+					+ trigger.getCronExpression());
+			sched.start();
+			log.info("------- Started Scheduler -----------------");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String[] args) {
+		StockAutoCollection s = new StockAutoCollection();		
+		s.run();
+	}
+
+}
