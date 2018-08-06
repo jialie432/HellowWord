@@ -1,0 +1,25 @@
+	static AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withEndpointConfiguration(
+			new AwsClientBuilder.EndpointConfiguration("http://localhost:8000", "us-east-1"))
+			.build(); 
+	
+	static DynamoDB dynamoDB = new DynamoDB(client);
+    static SimpleDateFormat dateFormatter = new SimpleDateFormat(
+        "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		
+   private DynamoDBAdapter() {
+    	this.client = AmazonDynamoDBClientBuilder.standard()
+                .withRegion(Regions.US_EAST_1)
+                .build();
+    	
+        logger.info("Created DynamoDB client");
+    }
+	
+	3. display,
+# read result create backend service
+# UI display data table
+# UI display graph
+
+XXX tasks:
+1. define data, 
+stock: sector
+dynamodata model:

@@ -1,0 +1,22 @@
+echarts:
+1. <div id="main" style="width: 600px;height:400px;"></div>
+2. var myChart = echarts.init(document.getElementById('main'));
+var option = {
+	title:
+	tooltip:
+	legend:
+	xAxis: {
+		data: []
+		},
+	yAxis:{},
+	series: [{
+		name: 'Sales',
+		type: 'bar'
+		data:[5,20,43,10]
+	}]
+};
+myChart.setOption(option);
+
+## dataset
+
+		
