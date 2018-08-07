@@ -7,13 +7,29 @@ X# autoload to Database
 2. calculation
 X# read data from DB Mysql
 # calculation
-# store calculation result (DynamoDB)
+X# store calculation result (DynamoDB)
 
 3. display,
-# read result
-# create backend service
+# read result create backend service
 # UI display data table
 # UI display graph
+
+
+
+XXX tasks:
+1. define data, 
+stock: sector
+dynamodata model:
+
+2. create table dynamo: serverless.yaml
+3. define data api: input output, code service code, unit test
+Adpater: 
+# getStockRatings(ticker)
+#getStockRatings(sector)
+
+3. deploy serverless
+4. static page: call service api,  get json data
+5. datatable
 
 
 ###Auto data collection:

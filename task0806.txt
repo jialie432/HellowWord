@@ -13,7 +13,9 @@
     	
         logger.info("Created DynamoDB client");
     }
-	
+
+https://github.com/mohamedadly/AWS-Lambda-Elastic-Transcoder-Event-Handler/tree/master/tst/net/fbd/eteventhander
+https://github.com/aws-samples/emr-pmml-demo/tree/master/jpmml-demo-lambda	
 	3. display,
 # read result create backend service
 # UI display data table
@@ -21,5 +23,102 @@
 
 XXX tasks:
 1. define data, 
-stock: sector
 dynamodata model:
+
+2. create table dynamo: serverless.yaml
+
+3. define data api: input output, code service code, unit test
+Adpater: 
+# getStockRatings(ticker)
+#getStockRatings(sector)
+
+
+## tasks:
+1. create table: 
+#aws local
+# using serverless.yaml
+
+2. unit test local
+# test db read localendpoint
+
+3. unit test handler
+
+4. deploy and run
+
+5. html datatable integration
+
+https://spring.io/guides/gs/consuming-rest-jquery/
+
+$(document).ready(function() {
+    $.ajax({
+        url: "https://xf6pawa6j7.execute-api.us-east-1.amazonaws.com/dev/users/alexdebrie1"
+    }).then(function(data) {
+       $('.greeting-id').append(data.userId);
+       $('.greeting-content').append(data.name);
+    });
+});
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hello jQuery</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="js/hello.js"></script>
+    </head>
+
+    <body>
+        <div>
+            <p class="greeting-id">The ID is </p>
+            <p class="greeting-content">The content is </p>
+        </div>
+    </body>
+</html>
+
+aws local:
+aws dynamodb list-tables --endpoint-url http://localhost:8000
+https://docs.aws.amazon.com/cli/latest/reference/dynamodb/index.html
+
+	static AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withEndpointConfiguration(
+			new AwsClientBuilder.EndpointConfiguration("http://localhost:8000", "us-east-1"))
+			.build(); 
+			
+ @Before
+    public void setUp() throws IOException {
+    	Map<String,String> idMap = new HashMap<>();
+    	idMap.put("account_id", "1234");
+        input.put("pathParameters", idMap);     
+    }
+    @Test
+    public void testLambdaFunctionHandler() {
+    	GetTransactionsHandler handler = new GetTransactionsHandler();
+        Context ctx = createContext();
+        ApiGatewayResponse  response = handler.handleRequest(input, ctx);
+        System.out.println(response.getBody());
+        System.out.println(response.getStatusCode());
+        // TODO: validate output here if needed.
+        //Assert.assertEquals(CONTENT_TYPE, output);
+    }
+
+resources:
+  Resources:
+    transactionsTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: tx_table
+        AttributeDefinitions:
+          - AttributeName: account_id
+            AttributeType: S
+          - AttributeName: transaction_date
+            AttributeType: S
+        KeySchema:
+          - AttributeName: account_id
+            KeyType: HASH
+          - AttributeName: transaction_date
+            KeyType: RANGE
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+
+
+### add ratings:
+		  
+		  
