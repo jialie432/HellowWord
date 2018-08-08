@@ -1,0 +1,9 @@
+job scheudling
+rest call daa download 
+jsoup data download 
+csv file processing
+mysql CRUD
+\MongoDB CRUD
+Spring REST
+serverless REST 
+serverless MongoDB
