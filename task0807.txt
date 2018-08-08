@@ -1,0 +1,60 @@
+task 08/07
+example-aws-lambda-service
+
+https://github.com/meal-plannr/aws-api
+
+
+
+4. request/response
+
+5. lambda handler
+class ListReviewHandler implements RquestHandler(APIGatewayProxyRequestEvent input,  Context context)
+//get id from pathparmeter
+final String userId = input.getPathParameters().get("userId");
+// get from query parameters
+final Map<String, String> queryParameters = input.getQueryStringParameters();
+final String count = queryParameters == null ? null : queryParameters.get("count");
+// call service to query DB and return response
+final ListReviewsResponse response = reviewService.listReviews(ListReviewsRequest.of(userId, count, paginationToken));            
+     return new APIGatewayProxyResponseEvent()
+            .withBody(mapper.writeValueAsString(response))
+            .withStatusCode(HttpStatus.SC_OK);
+
+1. service			
+public ReviewService(UserService userService, MovieService movieService, ReviewDAO reviewDAO) {
+        this.userService = userService;
+        this.movieService = movieService;
+        this.reviewDAO = reviewDAO;
+}
+2. DAO
+public ReviewDAO(DynamoDBMapperWrapper mapper) {
+        this.mapper = mapper;
+}
+doing pagination
+https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Query.html#Query.Pagination
+ public Optional<Review> fetchLatestFavorite(String userId, double minimumRating) {
+        final Map<String, AttributeValue> expressionAttributeValues = ImmutableMap.of(
+                ":id", new AttributeValue(userId),
+                ":minimumRating", new AttributeValue().withN(Double.toString(minimumRating))
+        );
+
+        final DynamoDBQueryExpression<Review> queryExpression = new DynamoDBQueryExpression<Review>()
+                .withIndexName(Review.USER_ID_TO_CREATED_AT_INDEX)
+                .withKeyConditionExpression("userId = :id")
+                .withFilterExpression("rating >= :minimumRating")
+                .withExpressionAttributeValues(expressionAttributeValues)
+                .withConsistentRead(false)
+                .withScanIndexForward(false);
+
+        return mapper.queryPage(Review.class, queryExpression)
+                .getResults()
+                .stream()
+                .findFirst();
+    }
+3. POJO
+
+
+https://github.com/rchepya1/Java-AWSElasticSearch_APIGateway.git
+https://github.com/linahovanessian/AWS-Lambda.git
+
+	
