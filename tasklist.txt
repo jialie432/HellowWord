@@ -2,8 +2,26 @@ job scheudling
 rest call daa download 
 jsoup data download 
 csv file processing
-mysql CRUD
-\MongoDB CRUD
+mysql CRUDMongoDB CRUD
 Spring REST
 serverless REST 
 serverless MongoDB
+
+
+Cloud Tasks:
+1. AWS VPC
+2. AWS RDS, web server
+3. AliCloud VPC
+4. Alicloud mysql, web server
+
+
+Quick prototype tasks:
+
+1. alicloud spring run
+2. alicloud tomcat
+3. alicloud mongoDB
+4. alicloud mysql 
+5. datatable spring example in alicloud
+
+
+Spring rest mongodb
