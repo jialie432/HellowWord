@@ -1,0 +1,19 @@
+Access Db from web server
+in same VPC
+
+1. create VPC and subnet
+
+2. create second private subnet for RDS
+
+3. create VPC security group for public web server
+	create vpc security group
+	add inbound rules to teh security group
+	
+4. create a vpc security group for private RDS
+
+5. create ad DB subnet group
+
+https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_Tutorials.WebServerDB.CreateVPC.html
+
+
+https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.Scenarios.html
