@@ -1,0 +1,190 @@
+Amazon Virtual Private Cloud (VPC) is the heart of AWS cloud hosting, yet a very complex concept to understand, 
+especially for developers who have limited infrastructure operations experience. 
+Developers are the most involved team members with cloud projects, yet have limited knowledge about infrastructure operations 
+((in the majority of cases).
+
+In this article, we are going to start by looking at the different types of VPC setups available in AWS. 
+Next, we will move onto understanding the VPC technical terminology. Then, 
+we will translate these technical terms into layperson terms, which helps everyone understand VPC more easily.
+
+AWS started its “virtual network” journey by introducing “EC2-classic”. 
+This is AWS’s first generation way of creating an EC2 instance in a “virtual network”. 
+EC2-Classic is not supported by AWS anymore. AWS stopped supporting “EC2-classic” and introduced “EC2-VPC”; 
+in other words an “AWS VPC” network.
+
+ 
+
+One of the reason why AWS discarded “EC2-classic” is, your AWS network is shared with other AWS tenants. 
+This means that the “virtual network” is NOT really a private network for your account. 
+This limitation is little bit counter-intuitive for teams who are used to owning/maintaining their own networks 
+while hosting servers on-premises. This need prompted AWS to come up with their second generation “virtual network”: EC2-VPC.
+
+Whenever you launch an instance within your AWS account, by default it will be launched into a default VPC and 
+gets public IP and private IP. How does that happen?
+
+What is EC2-VPC?
+Amazon VPC enables you to define a virtual network in your own logically isolated area within the AWS cloud, 
+known as a virtual private cloud (VPC). You can launch your AWS resources, such as instances, into your VPC. 
+Your VPC closely resembles a traditional network that you might operate in your own data center, 
+with the benefits of using AWS scalable infrastructure.
+
+If you created your AWS account after 2013-12-04, it supports only EC2-VPC. 
+In this case, AWS creates a default VPC for you in each AWS Region. 
+Therefore, unless you create a non default VPC and specify it when you launch an instance, 
+AWS launch your instances into your default VPC.
+
+What happens during the default VPC creation?
+
+When AWS creates the default VPC, it:
+
+Creates a VPC with a size /16 IPv4 CIDR block (172.31.0.0/16). This provides up to 65,536 private IPv4 addresses.
+Creates a size /20 default subnet in each Availability Zone. This provides up to 4,096 addresses per subnet, 
+a few of which are reserved for our use.
+Creates an internet gateway and connect it to your default VPC.
+Creates a main route table for your default VPC with a rule that sends all IPv4 traffic destined for the internet 
+to the internet gateway.
+Creates a default security group and associate it with your default VPC.
+Creates a default network access control list (ACL) and associates it with your default VPC.
+Associate the default DHCP options set for your AWS account with your default VPC.
+VPC can have either public and/or private subnets. You can learn more about these scenarios here.
+
+Subnet is a key component in VPC. A VPC can contain all public subnets (or) public/private subnet combination. 
+Private Subnet is a subnet which doesn’t have a route to the internet gateway. 
+A subnet can be configured as a VPN-only subnet by routing traffic via virtual private gateway. 
+You can learn more on enabling VPN here.
+
+How VPC and Subnet involved during EC2 instance launch?
+
+As defined above, VPC is a logically isolated network assigned to your account. 
+Every compute resource (in other words AWS EC2 instance) will be launched into “a” VPC.
+
+Launch instance into a VPC:
+
+When you launch an instance and specify a VPC, the first thing will be, 
+identifying the subnet where this instance need to be launched into. 
+If no subnet is selected, AWS will pick the default subnet within the selected VPC. 
+Once your subnet is identified, the next step will be identifying an Availability Zone. 
+Users can pick the zone or let AWS select a zone for you.
+
+Once an instance is created within the VPC/Subnet/Availability Zone, 
+a primary private IP address from the IPv4 address range of the subnet is assigned to the default network interface (eth0) 
+of the instance. Each instance is also given a private (internal) DNS hostname that resolves to the private IP address of the instance. 
+If you don't specify a primary private IP address, we select an available IP address in the subnet range for you.
+
+When you launch an instance into a subnet that has assign public ip address attribute enabled, 
+a public IP address is assigned to the primary network interface (eth0) that's created for the instance. 
+A public IP address is mapped to the primary private IP address through network address translation (NAT). 
+These public addresses will change whenever you stop EC2 instance and start it again.
+
+While we are discussing IP addresses, one detail to understand is, 
+public IP addresses are different from AWS Elastic IP Addresses (EIP). 
+A public IP address assigned to an instance is from the Amazon’s pool of public IPv4 addresses. 
+The public IP address assigned to an instance will change when you stop and start (or) terminate the instance 
+(but not during the restart). EIPs are allocated to a user account, then you assign it to an instance. 
+Unless you disassociate from the instance (or) release it from your account, the EIP will stay same. 
+While using EIP, you need to be aware that this IP will cost you if it is not assigned to a running instance. 
+You can learn more details here.
+
+
+
+Source
+
+Unless you have prior experience in configuring (or) architecting data center network, 
+understanding all these underlying working details could be overwhelming, isn’t it? If you agree, then read on.
+
+Now that we learned inner workings of VPC and how launching an instance works, 
+let us now try to understand the technical definitions and then try to translate these into layperson terms using an office building analogy.
+
+Here are the technical definitions for the AWS resources we discussed so far:
+
+VPC definition:
+
+Amazon Virtual Private Cloud (Amazon VPC) lets you provision a logically isolated section of the AWS Cloud 
+where you can launch AWS resources in a virtual network that you define. 
+You have complete control over your virtual networking environment, including selection of your own IP address range, 
+creation of subnets, and configuration of route tables and network gateways. 
+You can use both IPv4 and IPv6 in your VPC for secure and easy access to resources and applications.
+
+Regions and Availability Zones
+Amazon EC2 is hosted in multiple locations world-wide. 
+These locations are composed of regions and Availability Zones. 
+Each region is a separate geographic area. Each region has multiple, isolated locations known as Availability Zones.
+
+Subnet
+Subnet is “part of the network”, in other words, part of entire availability zone. 
+Each subnet must reside entirely within one Availability Zone and cannot span zones.
+
+IP Address
+A unique string of numbers separated by periods that identifies each computer using the Internet Protocol 
+
+to communicate over a network. Each instance in AWS gets 2 IP address, a private ip address and public ip address.
+
+Security group
+A security group acts as a virtual firewall that controls the traffic for one or more instances. 
+When you launch an instance, you associate one or more security groups with the instance. 
+You add rules to each security group that allow traffic to or from its associated instances.
+
+Layperson terms
+To make these concepts more understandable, we’ll use an office building analogy:
+
+Think of your office as a multi-story building
+Each floor has multiple suites
+Each department like HR, Payroll can sit in one floor (or) multiple floors
+Every suite has few rooms
+Each room has couple of desk where employees work
+Region:  Think of the office building as equal to a Region. 
+Just like how AWS Regions encompass other components, the office building is an outer layer that contains many things.
+
+Availability Zone: Think of each floor like an Availability Zone. 
+Just like a region can have more than one availability zone, our building can have more than one floor.
+
+VPC:  Each department in the office is like a VPC. 
+VPCs span across availability zones in a region, and each department in your office can span across different floors.
+
+Subnet:  Each Suite represents a subnet. 
+Like how each subnet resides ONLY within an availability zone, each suite will be part of the floor and it won’t span across floors.
+
+IP Address:  Each desk within a suite represents an IP address.
+
+When companies assign a desk to employee, they first look at:
+
+Which department this employee belongs to
+Then identifies which floors the department spans across
+Then identifies which suites have open desks
+Assigns one of the open desks to the employee
+Likewise, when anyone launch AWS EC2 instance:
+
+We need to pick which VPC this instance should be deployed to
+Then we pick which availability zone (if not, default availability zone)
+Then we pick the subnet (if not default subnet)   
+Then an IP from this subnet gets assigned to our EC2 instance (as private IP)
+Other associated terminologies
+There are few more terms you need to understand while learning AWS VPC and launching EC2 instances.
+
+Security groups:
+
+A security group acts as a virtual firewall that controls the traffic for one or more instances. When you launch an instance, you associate one or more security groups with the instance. You add rules to each security group that allow traffic to or from its associated instances.
+
+We can think of office access cards, as equivalent to “security groups”. Depending on how granular you want the security, you can apply security groups at different levels in AWS. Same applicable for office building too. You can put access cards at the building level (or) floor level (or) some other measures.
+
+Public VPC with OPEN security groups:
+
+This is the case where you launch instances into a VPC and the security groups associated with VPC/instance 
+open up ALL ports; this is a VERY BAD practice. The equivalent in our office building analogy would be a building without any access cards. 
+EVERYONE can come and go to any floor or suite.
+
+Public VPC with Restricted security groups:
+
+This is the case where you launch instances into a VPC and the security groups associated with a VPC/instance restricts open ports; 
+this is a GOOD practice. The equivalent in our office building analogy would be a building with access cards. 
+Only people who have access cards can enter into the building and get around inside.
+
+Private VPC:
+
+Private VPC is a VPC with ONLY private subnets. These resources within a private VPC aren’t accessible to the outside world without either special tools (or) VPC peering.
+
+Though this is not a perfect analogy, we can think of “washrooms” in your office building as private VPC (in other words VPC with private subnets). People who don’t have access to building can’t access the washrooms.
+
+In summary, the combination of VPC + Availability Zone + Subnet + private/public ip addresses +security groups are
+the AWS resources which form the required infrastructure to support EC2 instances running in a secured and scalable environment.
+Understanding working principles of these resources will help users in properly configuring and utilizing these resources.

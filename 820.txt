@@ -1,0 +1,75 @@
+08/20
+
+https://www.valentinog.com/blog/react-redux-tutorial-beginners/
+
+Product table State and data flow:
+1. state in parent FilteableProductTable 
+filterText, inStockOnly
+
+2. pass to searchBar and ProductTable via properties
+##Parent:
+<searchBar
+	filterText ={this.state.filterText}
+	inStockOnly={this.state.inStockOnly}
+	onFilterTextChange ={this.handleFilterTextChange}
+	onInStockChange = {this.handleInStockStockChange}
+/>
+3. in searchBar, event handler pass value back to parent
+##Child:
+<input vaole="this.props.filterText} onChange={this.handlerFilterTextChange}/>
+in handler of searchBar update the parent property
+pass to parent, event variable value e.target.value:
+handleFilterTextChange(e) {
+    this.props.onFilterTextChange(e.target.value);
+}
+
+4. in parent; update state:
+##Parent:
+handleFilterTextChange(filterText) {
+    this.setState({
+      filterText: filterText
+    });
+  }
+
+5. pass updated state to another child: ProductTable
+## use updated filterText to filter product
+1. pass in product as property
+<FilterableProductTable products={PRODUCTS} 
+pass to child productTable via props
+<ProductTable products={this.props.products} filterText={this.state.filterText} inStockOnly={this.state.inStockOnly} />
+2. filter the product based on filterText: product and filterText
+3. display array in table:
+#define rows array
+const rows=[];
+this.products.forEach((product=> {
+	rows.push(<ProductRow product={product} key={product.name} />
+});
+# display
+<tbody>{rows}</tbody>
+
+
+#####syntax:
+
+this.setState({
+  value: 1
+});
+this.setState((state)=>({value:state.value++}));
+this.setState({value: this.state.value+1});
+
+
+### state and props example2:
+book example ch06/onclick-parent
+1. parent:defint handler, pass to child1 as props
+this.state={counter:0};
+<ClickCounterButton handler={this.handleClick}/>
+
+2. child1: ClickCounterButton, when changed, call parent handler
+<button onClick={this.props.handler}
+3. in parent handler: change state
+handleClick(event){
+	this.setState(*{counter: ++this.state.counter});
+}
+4. pass changed state value to child2 use props
+<Counter value={this.state.counter}/>
+5. display state in child2 from props
+{this.props.value}
