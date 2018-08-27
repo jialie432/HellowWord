@@ -1,7 +1,13 @@
 https://aws.amazon.com/blogs/compute/secure-api-access-with-amazon-cognito-federated-identities-amazon-cognito-user-pools-and-amazon-api-gateway/
 
-https://aws.amazon.com/blogs/compute/using-api-gateway-with-vpc-endpoints-via-aws-lambda/
 
-https://itnext.io/creating-a-blueprint-for-microservices-and-event-sourcing-on-aws-291d4d5a5817
+using cognito user pool
+1.  create in console
+2. create user pool in app
+3. signing up users for your app
+4. confirming users for your app
+5. sign user in 
+6. get user details
+7. getting credentials to access AWS resources
 
-https://docs.aws.amazon.com/lambda/latest/dg/best-practices.html
+https://github.com/aws-samples/aws-amplify-graphql

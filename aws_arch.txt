@@ -1,2 +1,25 @@
 aws artchiture notes:
 
+The first Lambda function makes requests out to a list of important services and writes their current status to a DynamoDB table. This function is executed once per minute via CloudWatch Event Rule.
+The second Lambda function reads each service’s status & uptime information from DynamoDB and renders a Jinja template. This function is behind an API Gateway that has been configured to return text/html instead of its default application/json Content-Type.
+
+
+https://agilevision.io/blog/serverless%20architecture/2017/02/12/easily-create-complex-workflows-with-aws-step-functions.html
+
+https://github.com/rlondner/aws-stepfunctions-samples
+https://www.mongodb.com/blog/post/integrating-mongodb-atlas-twilio-and-aws-simple-email-service-with-aws-step-functions-part-2
+
+https://github.com/the-road-to-learn-react/the-road-to-learn-react/blob/master/manuscript/chapter2.md
+
+APIGateway EC2:
+https://aws.amazon.com/blogs/compute/using-amazon-api-gateway-with-microservices-deployed-on-amazon-ecs/
+
+https://github.com/CapitalOne-DevExchange
+https://developer.capitalone.com/api-products/money-movement/
+
+https://it-wiki.greenskycredit.com/bin/view/Service+Operations+Center+%28SOC%29/Applications+and+Systems/OST/
+
+https://cssp.dev.greensky.net/greensky/home
+
+https://keys.dev.greensky.net/auth/realms/GreenSky/protocol/openid-connect/auth?client_id=tools-client&redirect_uri=https%3A%2F%2Fsupport.dev.greensky.net%2Fostcreditapp%2F%3FignoreSSNValidation%3Dtrue&state=be3f994f-978b-4796-83ac-8689452bfc30&nonce=bed610f0-0e20-4280-98c1-75bf70c7aa1e&response_mode=fragment&response_type=code&scope=openid
+

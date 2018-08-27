@@ -1,0 +1,89 @@
+ch6: AddColor
+
+App.js:
+step1:<AddColorForm onNewColor={addColor} />
+
+
+AddColorForm.js
+1. passed in addColor() as props
+const AddColorForm = ({onNewColor=f=>f {
+step3  const submit = e=> {
+	e.preventDefault()
+step4:	onNewColor(_title.value, _color.value) // called addColor(title,color)
+	_title.value=''
+	_color.value='#00000" //black
+	_title.focus
+  }
+step2: <form onSubmit={submit}
+}
+2 in APP.js update state of colors
+step5:addColor(title, color) {
+	this.setState( prevState=> ( {
+		colors:[
+			...prevState.colors, // get old state
+			{ di:v4(),title,color,ratings:0} // new color
+		]
+	}))
+}
+
+ColorList:
+step1: app.js
+<ColorList colors={colors} onRate={rateColor} onRemove={removeColor}/>
+step2: colorList.js
+<Color key={Color.id}
+	{...color}
+	onRate={(rating_=> onRate(color.id, rating)}  // calling parent rateColor(id,rating)
+	onRemove={() => onRemove(color.id)}/>
+step3:	update state in method in parent
+rateColor(id,rating) {
+	this.setState( prevState => ({
+		colors.prevState.colors.map(color=>
+			(color.id != id)?color:
+				{ ...color, rating}
+		)
+	}))
+	
+Color.js
+<StarRating starsSelected={rating} onRate={onRate}/>
+ColorList.js:
+<Color key={color.id}
+    {...color}
+    onRate={(rating) => onRate(color.id, rating)}
+    onRemove={() => onRemove(color.id)} />
+App.js:
+<ColorList colors={colors}
+	onRate={rateColor}
+    onRemove={removeColor} />
+removeColor(id) {
+		this.setState(prevState => ({
+			colors:prevState.colors.filter(color=>color.id !=id)
+		}))
+}
+
+## star.js
+<div.. onClick={onclick}
+------------------------------
+passing data from child to parent
+## star ratings.js
+<Star key={i}
+	selected={i<starsSelected}
+	onClick={()=>onRate(i+1)}/>
+##Color.js
+<StarRating starsSelected={rating} onRate={onRate}/>
+##	ColorList.js
+<Color key={color.id}
+	{...color}
+	onRate={(rating)=>onRate(color.id, rating)}
+	onRemove={()=>onRemove(color.id)}/>
+##App.js
+<ColorList colors={colors}
+    onRate={rateColor}
+    onRemove={removeColor} />
+rateColor(id, rating){
+}
+
+
+	
+						   
+						   
+
