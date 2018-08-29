@@ -1,0 +1,152 @@
+829
+FilterProductTable
+index.js
+
+<FilterableProductTable products={PRODUCTS} 
+const PRODUCTS = [
+	{category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
+    {category: 'Sporting Goods', price: '$9.99', stocked: true, name: 'Baseball'}
+]
+
+# class FilterableProductTable:
+state: filterText, inStockOnly
+
+<ProductTable 
+	products = { this.props.products}
+	filterText ={ this.state.filterText}
+	inStockOnly={this.state.inStockOnly}
+/>
+<SearchBar 
+	filterText = {this.state.filteText}
+	inStockOnly = {this.state.inStockOnly}
+	onFilterTextChange = {this.hanleFilterExtChange}
+	onInStockChange={this.handleInStockChange}
+/>
+ handleFilterTextChange(filterText) {
+      this.setState({
+        filterText: filterText
+      });
+}
+ handleInStockChange(inStockOnly) {
+      this.setState({
+        inStockOnly: inStockOnly
+      })
+ }
+ 
+## class SearchBar
+<input type="text" placehodler="Search..."
+	value={this.props.filterText}
+	onChange={this.hanldFilterTextChange}
+handleFilterTextChange(e) {
+	this.props.onFilterTextChange(e.target.value);
+}
+in onChange method, pass in e.target.value, invoke method passed in from parent.
+onChange -> handleFilterTextChange-> props.onFilterTextChange()-> (in parent class) onFilterTextChange ->handleFilterTextChange()
+
+## handler instock checkbox, 
+<input type="checkbox" checked={this.props.inStockOnly}
+	onChange={this.handleInStockChange}
+/>
+handleInStockChange9e) {
+	this.props.onInStockChange(e.target.checked);
+}
+
+##in parent method 
+define:
+onInStockChange={this.handlInStockChange}
+call method:
+handleInStockChange(inStockOnly) {
+      this.setState({
+        inStockOnly: inStockOnly
+      })
+    }
+
+## filter rows with searchText and display in Table
+const rows =[];
+
+this.props.products.forEach( (product) => {
+	if(product.name.indexOf(filterText)) === -1{
+		return;
+	}
+	if(inStockOnly && !product.stocked) {
+		return;
+	}
+	rows.push( <ProdutRow product={product} key={product.name} />);
+});
+## dispaly in table:
+<tbody> {rows}</tbody>
+	
+	
+### temperture calculate
+state: {temperature: '', scal:'c' };
+   <TemperatureInput
+          scale="c"
+          temperature={celsius}
+          onTemperatureChange={this.handleCelsiusChange} />
+   <TemperatureInput
+          scale="f"
+          temperature={fahrenheit}
+          onTemperatureChange={this.handleFahrenheitChange} />
+
+## TemplatureInput:
+const temperature=this.props.teperature;
+<input value={temperature}
+			onchange={this.handleChange} />
+handler method: invoke paranet method passed in from props
+handleChange(e) {
+	this.props.onTemperatureChange(e.target.value);
+}
+#3 in parent:
+onTemperatureChange={this.handleCelsiusChange} />
+method handleCelsiuschange(temp) {
+	this.setState({scale:'c', temp});
+}
+
+### pass in from event: 1:
+<TextField
+              name='title'
+              label='Exercise'
+              value={this.state.title}
+              onChange={this.handleChange('title')}
+              margin='normal'
+ />	
+     handleChange = name => event => {
+      console.log(this);
+      this.setState({
+        [name]: event.target.value,
+      });
+    };
+	
+## pass in from event 2:
+<TextField
+              name='title'
+              label='Exercise'
+              value={this.state.title}
+              onChange={this.handleChange} 
+              margin='normal'
+ />		
+ handleChange = ({ target: { name, value } }) =>{
+        console.log(name);
+        console.log(value);
+  
+        this.setState({
+          [name]: value
+        })
+    }	
+	
+## pass infrom event method 3:
+ onChange={(e)=>this.handleChange(e)}
+ 
+ handleChange = (e) =>{
+    console.log(this);
+      this.setState({
+        [e.target.name]: e.target.value
+      })
+    }
+	
+##handle form pass in value	id:
+ onClick={() => this.handleDelete(id)}
+   handleDelete = id =>
+      this.setState(({ exercises }) => ({
+        exercises: exercises.filter(ex => ex.id !== id)
+      }))

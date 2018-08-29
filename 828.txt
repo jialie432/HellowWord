@@ -1,0 +1,49 @@
+828
+async data:
+
+1.api call github to get user: ./api/github.js
+const getUser=(user)=>request(`https://api.github.com/users/${user}`)
+export (getUser}
+
+2. app.js
+import { getUser } from './api/github'
+constructor(props) {
+super(props);
+this.state = {user:{} );
+}
+componentDidMount() {
+	getUser('jlu')
+		.then(data=> {
+			console.log(data);
+			this.setState({user:data.entity});// data returned in entity :{} object
+		})
+}
+3. request.js
+const rest=require('rest')
+const mime = require('rest/interceptor/mime');
+export default rest.wrap(mime);
+
+4. render:
+const [user} = this.state;
+//loop over object key value:
+Object.keys(user).map(key => renderLine(user, key));
+
+const renderLine= (user,key)=> <li key={key}>{key}:{user[key]}</li>
+
+
+## user await to call api:
+constructor() {
+    super();
+    this.state = { data: [] };
+  }
+async componentDidMount() {
+    const response = await fetch(`https://api.coinmarketcap.com/v1/ticker/?limit=10`);
+    const json = await response.json();
+    this.setState({ data: json });
+ }
+ 
+ {this.state.data.map(el => (
+            <li>
+              {el.name}: {el.price_usd}
+            </li>
+          ))}
