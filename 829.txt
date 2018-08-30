@@ -2,6 +2,34 @@
 FilterProductTable
 index.js
 
+## how to handle searchbar
+child class <SearchBar
+1. create input, pass handler name only in onChange
+<form>
+    <input
+        type="text"
+        placeholder="Search..."
+        value={this.props.filterText}
+        onChange={this.handleFilterTextChange}
+    />
+2. create handler in same child with calling parent method passed in props:
+  handleFilterTextChange(e) {
+      this.props.onFilterTextChange(e.target.value); //param pass to handler in parent class
+    }
+3. in parent class: pass in handler in props
+   <SearchBar
+            filterText={this.state.filterText}
+            inStockOnly={this.state.inStockOnly}
+            onFilterTextChange={this.handleFilterTextChange} // pass in as props
+            onInStockChange={this.handleInStockChange}
+          />
+4. handler in parent class
+    handleFilterTextChange(filterText) { //filterText passed in from e.target.value
+      this.setState({
+        filterText: filterText
+      });
+    }
+	
 <FilterableProductTable products={PRODUCTS} 
 const PRODUCTS = [
 	{category: 'Sporting Goods', price: '$49.99', stocked: true, name: 'Football'},
@@ -22,6 +50,7 @@ state: filterText, inStockOnly
 	onFilterTextChange = {this.hanleFilterExtChange}
 	onInStockChange={this.handleInStockChange}
 />
+// 
  handleFilterTextChange(filterText) {
       this.setState({
         filterText: filterText
@@ -78,6 +107,7 @@ this.props.products.forEach( (product) => {
 	
 	
 ### temperture calculate
+# parent class
 state: {temperature: '', scal:'c' };
    <TemperatureInput
           scale="c"
@@ -88,7 +118,7 @@ state: {temperature: '', scal:'c' };
           temperature={fahrenheit}
           onTemperatureChange={this.handleFahrenheitChange} />
 
-## TemplatureInput:
+## child TemplatureInput:
 const temperature=this.props.teperature;
 <input value={temperature}
 			onchange={this.handleChange} />
@@ -98,7 +128,7 @@ handleChange(e) {
 }
 #3 in parent:
 onTemperatureChange={this.handleCelsiusChange} />
-method handleCelsiuschange(temp) {
+method handleCelsiuschange(temp) { // temp passed in from child. event.target.value
 	this.setState({scale:'c', temp});
 }
 
@@ -117,12 +147,12 @@ method handleCelsiuschange(temp) {
       });
     };
 	
-## pass in from event 2:
+## pass in from event 2: pass in just function name only
 <TextField
               name='title'
               label='Exercise'
               value={this.state.title}
-              onChange={this.handleChange} 
+              onChange={this.handleChange} // pass in func name only
               margin='normal'
  />		
  handleChange = ({ target: { name, value } }) =>{
@@ -134,8 +164,9 @@ method handleCelsiuschange(temp) {
         })
     }	
 	
-## pass infrom event method 3:
- onChange={(e)=>this.handleChange(e)}
+## pass infrom event method 3: return a function handler
+ onChange={(e)=>this.handleChange(e)} or just the funct name
+ onChange={this.handleChange}
  
  handleChange = (e) =>{
     console.log(this);
@@ -150,3 +181,35 @@ method handleCelsiuschange(temp) {
       this.setState(({ exercises }) => ({
         exercises: exercises.filter(ex => ex.id !== id)
       }))
+## use both event and id pass in: pass in default event,
+onClick={this.handleDelete(id)}
+
+handleDelete = id => e=>{    
+      console.log(e.target.value);
+      this.setState(({ exercises }) => ({
+        exercises: exercises.filter(ex => ex.id !== id)
+      }))
+    }
+	
+## best way:
+create sub component, pass handler and use props as argument,
+which will re-render only when props change.
+class TableHeader extends Component {
+	handlerClick = () => {
+		this.props.onHeaderClick(this.props.value); // onHeaderClick defined in parent
+	}
+	render() {
+		return {
+			<th onClick={this.handleClick}>
+				{this.props.column}
+			</th>
+		);
+	}
+}
+##Main Component:
+{this.props.defaultColumns.map((column) => (
+  <TableHeader
+    value={column} // property pass to child
+    onHeaderClick={this.handleSort}
+  />
+))}
