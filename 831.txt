@@ -1,0 +1,69 @@
+package.json: add
+
+"scripts": {
+  "start:dev": "webpack-dev-server"
+}
+npm run start:dev
+or 
+node_modules/.bin/webpack-dev-server
+
+https://www.sitepoint.com/css-theming-custom-properties-javascript/
+
+## onclick parent:
+#parent class:
+<ClickCounterButton handler = {this.handleClick} />
+handleclick(event){
+	this.setState({counter: ++this.state.counter})
+}
+#child
+<button onClick={this.props.handler} >
+
+## onclick parent props: pass in as props
+<ClickCounterButton
+    counter={this.state.counter}
+    handler={this.handleClick}/>
+handleClick(event) {
+    this.setState({counter: ++this.state.counter})
+  }
+  
+###form:
+<input type="text"
+	onChange={this.handleChange}
+		value={this.state.accountNumber }/>
+handleChange(event) {
+	console.log('typed value=', event.target.value)
+	this.setState({accountNumber:event.target.value.replace(/[^0-9]/ig, '')})
+}
+#conditional rendering:
+		<span>{this.state.accountNumber.length > 0 ? 'You entered: ' + this.state.accountNumber: ''}</span>
+		
+ handle radio button:
+ 1. set state in constructor
+ this.state={
+	radioGroup: {
+		anular:false,
+		react:true,
+		polymer: false
+}
+2.
+<input type="radio" name="radioGroup" value='angular' checked={this.state.radioGroup['angular']} onChange={this.handleRadio}/>
+<input type="radio" name="radioGroup" value='react' checked={this.state.radioGroup['react']} onChange={this.handleRadio}/>
+<input type="radio" name="radioGroup" value='polymer' checked={this.state.radioGroup['polymer']} onChange={this.handleRadio}/>
+3. handleRadio(event){
+	let obj={};
+	obj[event.target.value]=even.target.checked;
+	this.setState({radioGroup:obj});
+}
+
+##array mapping in javascript:
+const menus = ['Home',"About','Service','Contact us'];
+maps.map(v,i) => {
+	return <div key={i}<Link lable={v}/>,/div>
+	})};
+[1, 2, 3].map( value => <p>value</p>)
+[1, 2, 3].map( (value, index, list) => {
+return <p id={index}>{list[index]}</p>
+}) // <p id="0">1</p><p id="1">2</p><p id="2">3</p>	
+
+		
+	
