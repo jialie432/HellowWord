@@ -1,0 +1,73 @@
+Redux:
+1. define actions( type, payload) and const types for action
+export const ADD_BOOKMARK ='ADD_BOOKMARK';
+export const DELETE_BOOKMARK = 'DELETE_BOOKMARK';
+
+export const addBookmark = ({ title, url }) => ({
+  type: ADD_BOOKMARK,
+  payload: {
+    id: uuidv4(),
+    title,
+    url
+  }
+});
+
+export const deleteBookmark = id => ({
+  type: DELETE_BOOKMARK,
+  payload: {
+    id
+  }
+});
+
+2. in reducer, write operations on redux state
+function bookmarksReducer(state = [], action) {
+  switch (action.type) {
+    case ADD_BOOKMARK:
+      return [...state, action.payload];
+    case DELETE_BOOKMARK:
+      return state.filter(bookmark => bookmark.id !== action.payload.id);
+    default:
+      return state;
+  }
+}
+
+3. connect from presentational component to containers component
+##3.1 containers: AddBookmarks.js method onAddBookmark() to dispatch action
+const mapDispatchToProps = dispatch => {
+	return {
+		onAddbookmark: bookmark => {
+			dispatch(addbookmark(bookmark));
+		}
+	};
+};
+##3.2 onAddBookmark(), in newBookmark.js, handleSubmit(e)
+<form onSubmit={this.handleSubmit}>
+..
+</form>
+handleSubmit=(e)=> {
+	e.preventDefault();
+	this.props.onaddBookmark(this.state);
+}
+
+##4.1 container BookmarkList.js method connect Redux state and action to presentation comp: bookmark.js
+BookmarksList({bookmarks, onDelete}){
+}
+const mapStateToProps = state=> {
+	return { bookmarks:state};
+}
+const mapDispatchToProps = dispatch => {
+return {
+	onDelete: id=> {
+		dispatch(deleteBookmark(id));
+}
+<Bookmark bookmark={bookmark} onDelete={onDelete} key={bookmark.id} />
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BookmarksList);
+##4.2 on presentation comp: it receive bookmark and onDelete as props
+function ({bookmark:{title,url,id}, onDelete} =>{
+	<button onClick={()=>onDelete(id)}>
+
+	
