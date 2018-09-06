@@ -1,0 +1,156 @@
+fancy bookmark:
+
+#app.js
+us container component:
+<div>
+        <AddBookmark />
+        <BookmarksList />
+</div>
+2. container component connect to redux
+AddBookmark.js
+const mapDispatchtoProps = dispatch => {
+	return {
+		onAddBookmark: bookmark => {
+			dispatch(addBookmark(bookmark));
+		}
+	};
+};
+export default connect(null, mapDispatchtoProps)(NewBookmark);
+
+3. links between container and presentation compoment NewBookmark
+<form onSubmit={this.handleSubmit}>
+handleSubmit = e=> {
+	this.props.onAddBookmark(this.state); // same func name in container mapping.
+	}
+}
+
+4. in reducer 
+switch (action.type) {
+    case ADD_BOOKMARK:
+      return [...state, action.payload];
+	  
+----------------------
+bookmarklist component:
+connect to redux:
+const mapStateToProps = state => {
+  return {
+    bookmarks: state
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    onDelete: id => { // matches method in presnetation props
+      dispatch(deleteBookmark(id));
+    }
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BookmarksList);
+
+# presentation component pass in prop, props.onDelete() matches dispatch maps.
+function BookmarksList({bookmarks, onDelete} ) {
+<div>
+      {bookmarks.map(bookmark => {
+        return (
+          <Bookmark bookmark={bookmark} onDelete={onDelete} key={bookmark.id} />
+        );
+      })}
+boomark.js
+ <button type="button" onClick={() => onDelete(id)}>
+
+#### how id is passed in on Delete.
+1 use redux pass in redux state as bookmarks
+const mapStateToProps = state => {
+  return {
+    bookmarks: state
+  };
+};
+// pass to bookmark comp use props, onDelete pass in as props:
+function BookmarksList({ bookmarks, onDelete }) {
+  return (
+    <div>
+      {bookmarks.map(bookmark => {
+        return (
+          <Bookmark bookmark={bookmark} onDelete={onDelete} key={bookmark.id} />
+        );
+      })}
+    </div>
+  );
+}
+##map onDelete func to redux action:
+const mapDispatchToProps = dispatch => {
+  return {
+    onDelete: id => {
+      dispatch(deleteBookmark(id));
+    }
+  };
+};
+
+2. bookmark componnet: display value from props, wire onDelete with id
+when click, invoke func passed in from props.
+export default ({ bookmark: { title, url, id }, onDelete }) => {
+  return (
+    <div style={styles}>
+      <h2>{title}</h2>
+      <p>URL: {url}</p>
+      <button type="button" onClick={() => onDelete(id)}>
+        Remove
+      </button>
+    </div>
+  );
+};
+
+3. in redux reduce: do delete from state:
+case DELETE_BOOKMARK:
+	return state.filter(bookmark => bookmark.id !== action.payload.id);
+	
+https://hackernoon.com/how-to-redux-with-react-836ed6d85330	
+### how new bookmark is added:
+1. action:
+const addBookmark = ({title, url}) => ({
+	type:ADD_BOOKMARK,
+	payload: {
+		id:uuidv4(),
+		title,
+		url}
+});
+2. container :addBookmark.js
+map dispatch to props
+const mapDispatchToProps = dispatch => {
+	return {
+		onAddBookmark: bookmark => {
+			dispathc(addBookmark(bookmark));
+		}
+	};
+};
+connect(null, mapDispatchToProps)(Newbookmark);
+3. redux reduce func:, add newbookmark to state
+case ADD_BOOKMARK:
+	return [...state, action.payload];
+4. UI: pass func as props. 	func name is redux reduce function name:
+<form onsubmit={this.handleSubmit}> // pass func name only
+handleSubmit = e=>{
+	this.props.onAddBookmark(this.state); 
+}
+
+ ----------------------
+ React_redux_todoapp
+ 1.App.js
+ <CreateTodo />
+ <Table />
+ 2. container connect to redux and presentation comp
+ Createtodo.js
+ const mapDispatchToProps = (dispatch) => {
+ return bindActionCreators({
+        addTodo //func name
+    }, dispatch)
+ }
+ // pass in props funcaddTodo
+ <button type="button" onClick={() =>{ this.props.addTodo(this.state.todotext); this.setState({ todotext: '' }) } }
+ 
+ 
+  
+ 
+ 
