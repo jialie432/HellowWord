@@ -1,0 +1,56 @@
+react:
+1. pass dat through props
+parent:
+renderSquare(i) {
+	return <Square val={i} />;
+}
+child component:
+<button className="square" >
+	{this.props.val}
+</button>
+
+#pass a function as paramer to a  function
+<button onClick={()=>alert('click')}>
+
+# state in constructor
+constrocutor(props){
+	super(props);
+	this.state = {
+		val:null,
+	};
+}
+// change value of state use setState()
+<button onClick={()=> this.setState({value:'X'})}>
+	{this.state.val}
+</button>
+
+##lifting state up
+store state in parent component, pass state to child component
+declare shared state in parent pass as props to  two children
+
+in parent: Board: setState array for square
+this.state = {
+      squares: Array(9).fill(null),
+};
+pass state as props to child square: value and onClick() method to child square
+<Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+child: onClick method is passed in from parent, when clicked, parent onClick() called, that is handleClick(i)
+<button
+        className="square"
+        onClick={() => this.props.onClick()}
+      >
+        {this.props.value}
+ </button>
+#change state in handleClick()
+const squares = this.state.squares.slice();
+squares[i]= this.state.xIsNext ? 'X' :'O';
+this.setState( {
+		squares:squares,
+		xIsNex :!this.state.XisNext,
+	});
+	
+
+	

@@ -8,20 +8,71 @@ serverless REST
 serverless MongoDB
 
 
-Cloud Tasks:
-1. AWS VPC
-2. AWS RDS, web server
-3. AliCloud VPC
-4. Alicloud mysql, web server
+React.js strategy
+1. read, run code, 
+2. take notes
 
 
-Quick prototype tasks:
 
-1. alicloud spring run
-2. alicloud tomcat
-3. alicloud mongoDB
-4. alicloud mysql 
-5. datatable spring example in alicloud
+task lists:
+1. auto data collection
+X# auto start
+X# download stock data: sh, ss
+X# autoload to Database
+
+2. calculation
+X# read data from DB Mysql
+# calculation
+# store calculation result (DynamoDB)
+
+3. display,
+# read result
+# create backend service
+# UI display data table
+# UI display graph
 
 
-Spring rest mongodb
+###Auto data collection:
+
+
+https://www.digitalocean.com/community/tutorials/how-to-install-mysql-on-centos-7
+mvn archetype:generate -DgroupId=com.data.autocollection -DartifactId=mysqlload -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+
+mvn exec:java -Dexec.mainClass="com.data.autocollection.ImportCSV" -Dexec.cleanupDaemonThreads=false
+
+
+writing strategies:
+1. find an article
+2. scan: header, conclusion, each section
+notes:
+3. notes own words: 
+overview
+contents
+conclusion
+sentences
+
+
+auto data collections:
+1. steam line process
+	map out data flow, 
+	optimzie
+	automate process
+	test run
+2. data download
+3. transform
+4. load
+5. verify
+6. logging errors
+
+hourly task:
+loop1:
+set alarm,study 20 minute
+workout 10 min
+loop2:
+study 20 minute
+workout 10 min
+
+job 6 will run every 30 seconds but only on Weekdays (Monday through Friday)
+0,30 * * ? * MON-FRI"
+
+0 30 13 ? * MON-FRI

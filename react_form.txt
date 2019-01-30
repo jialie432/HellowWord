@@ -1,0 +1,130 @@
+ https://github.com/blizzerand/react-forms.git
+ 
+ react form handling
+ handleInput:
+ <Input inputType={'text'}
+          title={'Full Name'}
+          name={'name'}
+          value={this.state.newUser.name}
+          placeholder={'Enter your name'}
+          handleChange={this.handleInput}
+
+/>
+ handleInput(e) {
+    let value = e.target.value;
+    let name = e.target.name;
+    this.setState(prevState => ({
+      newUser:
+      {
+        ...prevState.newUser, [name]: value
+      }
+    }), () => console.log(this.state.newUser))
+  }
+------------------checkbox for skills--------
+thi.state={
+	newUser: {
+		name:'',
+		skills:[]
+	},
+	skillsOptions: ['programming','Devops','design''testing']
+}
+
+       <CheckBox title={'Skills'}
+          name={'skills'}
+          options={this.state.skillOptions}
+          selectedOptions={this.state.newUser.skills}
+          handleChange={this.handleCheckBox}
+        /> {/* Skill */}
+ handleCheckBox(e) {
+    const newSelection = e.target.value;
+    let newSelectionArray;
+    if (this.state.newUser.skills.indexOf(newSelection) > -1) {
+      newSelectionArray = this.state.newUser.skills.filter(s => s !== newSelection)
+    } else {
+      newSelectionArray = [...this.state.newUser.skills, newSelection];
+    }
+    this.setState(prevState => ({
+      newUser:
+      { ...prevState.newUser, skills: newSelectionArray } // put new skills back to state
+    })
+    )
+  } 
+  
+// array operaiotn:  
+//// remove if in the list, else add to the list
+    if (this.state.newUser.skills.indexOf(newSelection) > -1) {    
+      newSelectionArray = this.state.newUser.skills.filter(s => s !== newSelection) // remove
+    } else {
+      newSelectionArray = [...this.state.newUser.skills, newSelection]; // add 
+    }
+	
+// search in array
+var fruits = ['apple', 'banana', 'grapes', 'mango', 'orange'];
+function filterItems(query) {
+  return fruits.filter(function(el) {
+      return el.toLowerCase().indexOf(query.toLowerCase()) > -1;
+  })
+}
+const filterItems = (query) => {
+  return fruits.filter((el) =>
+    el.toLowerCase().indexOf(query.toLowerCase()) > -1
+  );
+}
+console.log(filterItems('ap')); // ['apple', 'grapes']
+console.log(filterItems('an')); // ['banana', 'mango', 'orange']	
+//
+const items = ['item1', 'item2', 'item3'];
+const copy = [];
+
+items.forEach(function(item){
+  copy.push(item)
+});
+
+## clear form:
+ handleClearForm(e) {
+    e.preventDefault();
+    this.setState({
+      newUser: {
+        name: '',
+        age: '',
+        gender: '',
+        skills: [],
+        about: ''
+      },
+    })
+  }
+  
+## submit form:
+<form className="container-fluid" onSubmit={this.handleFormSubmit}>
+        <Button
+          action={this.handleFormSubmit}
+          type={'primary'}
+          title={'Submit'}
+          style={buttonStyle}
+        /> { /*Submit */}
+
+        <Button
+          action={this.handleClearForm}
+          type={'secondary'}
+          title={'Clear'}
+          style={buttonStyle}
+        /> {/* Clear the form */}
+
+</form>
+  handleFormSubmit(e) {
+    e.preventDefault();
+    let userData = this.state.newUser;
+    console.log("newdata=" + JSON.stringify(userData));
+    fetch('http://example.com', {
+      method: "POST",
+      body: JSON.stringify(userData),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    }).then(response => {
+      response.json().then(data => {
+        console.log("Successful" + data);
+      })
+    })
+  }

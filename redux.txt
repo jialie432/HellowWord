@@ -1,0 +1,83 @@
+Redux:
+
+omplement container components:
+naoStateToProps(), how to map current redux state into props
+VisibleTodoList need sto calcuate todos to pass to TodoList
+define a function filters the state.todos based on state.visibilityFilter
+
+
+const mapSatteToProps = state => {
+	return {
+		todos: getVisilbeTodos(state.todos, state.visibilityFilter)
+	}
+}
+const getVisbleTods = (todos, filter )=> {
+	swith(filter ){
+	case 'SHOW_COMPLETED':
+      return todos.filter(t => t.completed)
+    case 'SHOW_ACTIVE':
+      return todos.filter(t => !t.completed)
+    case 'SHOW_ALL':
+    default:
+      return todos
+  }
+}	
+
+container component can dispatch actions
+mapDispatchToProps() to receive dispatch() method and return callback props you wnat to inject into presentation compoennt
+VisibleTodoList to inject a prop called onTodoClick into the TodoList component
+onTodoclick to dispathc a TOGGLE_TOD action
+const mapDispathchToProps = dispatch => {
+	return {
+		onTodoClick: id=> {
+			dispatch(toggleTodo(id))
+		}
+	}
+}
+## connect
+const VisibleTodoList = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(TodoList)
+
+--------------------------------
+https://www.valentinog.com/blog/react-redux-tutorial-beginners/
+1. create store:
+const store =createStore(rootReducer);
+2 .reducer:
+const articleReducer = (state=[], action) => {
+	switch (action.type) {
+		case ADD_ARTICLE: 
+		return [...state, action.payload];
+	default: 
+		return state;
+	}
+};
+3 .action
+const addArticle = article => ( 
+	{	type: "ADD_ARTICLE",
+		payload:article
+	}
+);
+4. map redux state to react props
+const mapStateToProps = (state)=> {
+	return { article:state.articles}; // state.aticle from redux reduce
+};
+const List = connect(mapStateToProps)(connectedList);
+
+5. map redux dispatch action to react props
+const mapDispatchToProps = dispatch => {
+	return {
+		addArticle:aricle => dispatch(addArticle(article))
+	};
+};
+//it receives a Redux action as prop. This way it can update the global state by dispatching the addArticle action.
+handleSubmit(event) {
+	this.props.addArticle({title,id});  // calling dispatcher to action: addArticle in redux action
+	
+}
+
+6 connect the action:
+const Form = connect(null, mapDispatchToProps)(ConnectedForm);
+
+	

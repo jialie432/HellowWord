@@ -1,0 +1,60 @@
+thinkining in react:
+1. get raw data format
+2. create a mock screen
+3. break the UI into component hierarchy
+4. build a static version in react
+5. identify the Minimal (but ocmplete) respresnetation of UI state
+6. identify where your state should live
+7. add inverse data flow
+
+
+1. data format:
+json array
+{category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football"}
+3. draw box on each component
+single responsibility principle. one componnet do one thing.
+map data to UI
+create component hierachy:
+# whole app
+# search bar
+# product table
+	# category row
+	# product row
+	
+5. #if passed in from parent, not a state
+	# remain unchanged over time, not state
+	# can it be computed? not state
+	search text and checkbox are states
+	
+6. where state should live?
+which component owns the state and mutate the state?
+
+# prdocut table need filter based state
+# status bar needs display search text and checkbox state
+# move the state to parent FilterableProductTable
+
+pass the state to child as props
+
+7 add invese data flow
+from searchbox -> filterableproducttable -> producttable
+
+# state in parent
+this.state={ inStockOnly:false}
+#parent handler change state
+handleInStockChange(inStockOnly){ // value from child event.target.checked
+        this.setState({
+            inStockOnly:inStockOnly
+        });
+    }
+#pass parent handler to child as props to child
+<SearchBar 
+  onInStockOnly = {this.handleInStockChange}
+/>
+#child native onChange define child handler
+<input onChange={this.handleInstockChange}
+
+#child handler invoke parent handler from props.
+pass value from event to parent:
+ handleInStockChange(e){
+        this.props.onInStockOnly(e.target.checked);
+}

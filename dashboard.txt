@@ -1,0 +1,373 @@
+material-dashboard-react
+## routing:
+src/index.js
+import indexRoutes from "routes/index.jsx";
+<Router history={hist}
+	<Switch>
+		{indexRoutes.map((prop, key) => {
+			return <Route path={prop,path} component={prop.component} key={key} />;
+		})}
+	</Switch>
+</Router>
+#routes/index.jsx
+import Dashboard from "layouts/Dashboard/Dashboard.jsx";
+const indexRoutes = [{ path: "/", component:DashBoard }];
+
+#reouters/dashboard.jsx defines all routers
+const dashboardRoutes = [
+  {
+    path: "/dashboard",
+    sidebarName: "Dashboard",
+    navbarName: "Material Dashboard",
+    icon: Dashboard,
+    component: DashboardPage
+  },
+  {
+    path: "/user",
+    sidebarName: "User Profile",
+    navbarName: "Profile",
+    icon: Person,
+    component: UserProfile
+  },
+ #Router used in layouts/DAshboard.jsx
+ const switchRoutes = (
+  <Switch>
+    {dashboardRoutes.map((prop, key) => {
+      if (prop.redirect)
+        return <Redirect from={prop.path} to={prop.to} key={key} />;
+      return <Route path={prop.path} component={prop.component} key={key} />;
+    })}
+  </Switch>
+);
+
+DAshboard 
+<GridContainer>
+	<GridItem xs ={12} sm{12} md={3} >
+		<Card chart>
+			<CardHeader>
+				<CardtistGraph
+			</CardHeader>
+			<CardBody>
+				{text}
+			</CardBody>
+			<CardFooter chart>
+			</CardFooter>
+		</Card>
+	</GridItem>
+
+	
+	
+
+
+#footer.jsx:
+1. pass in classes via props
+function Footer({ ...props}) {
+	const {classes} = props;
+2. styles:
+  <footer className={classes.footer}>
+      <div className={classes.container}>
+        <div className={classes.left}>
+3. list, listitem and <a>
+        <List className={classes.list}>
+            <ListItem className={classes.inlineBlock}>
+              <a href="#home" className={classes.block}>
+                Home
+              </a>
+            </ListItem>
+            <ListItem className={classes.inlineBlock}>
+              <a href="#company" className={classes.block}>
+                Company
+              </a>
+            </ListItem>
+		</List>
+4. copyright, right align:
+<p className={classes.right}>
+          <span>
+            &copy; {1900 + new Date().getYear()}{" "}
+            <a href="https://www.creative-tim.com" className={classes.a}>
+              Creative Tim
+            </a>, made with love for a better web
+          </span>
+</p>		
+
+## table section:
+1. layout: <GridContainer> <GridItem xs sm md>
+https://material-ui.com/layout/grid/
+		<GridItem xs={12} sm={12} md={6}> // 12 is whole width, 6 is half
+2. card inside grid cell
+<Card>
+	<CardHeader>
+	<CardObdy>
+		<Table 
+3. Table inside:
+Table.jsx
+	pass in data via props
+	<Table> 
+		<TableHeader>
+			<TableRow> //map header tableHead={["ID", "Name", "Salary", "Country"]}
+				{tableHead.map((prop, key) => {
+					return(
+						<TableCell className={classes.tableCell + " " + classes.tableHeadCell} key={key}>
+						 {prop}
+						 </TableCell>
+						);
+					})}
+			</TableRow>
+		</TableHeader>
+		
+	<TableBody>
+//tableData={[
+                    ["1", "Dakota Rice", "$36,738", "Niger"],
+                    ["2", "Minerva Hooper", "$23,789", "Curaçao"],
+                    ["3", "Sage Rodriguez", "$56,142", "Netherlands"],
+                    ["4", "Philip Chaney", "$38,735", "Korea, South"]
+            ]	
+//map tableData to each tableRow and map each row to tablecell			
+{tableData.map((prop,key) => {
+	return (
+		<TableRow key = {key}
+			{prop.map((prop,key) => { // map each row 
+				return (
+					<TableCell key={key}> {prop} </TableCell>
+				);
+			})}
+		</TableRow>
+	);
+})}
+
+## top graph
+const dailySalesChart = {
+  data: {
+    labels: ["M", "T", "W", "T", "F", "S", "S"],
+    series: [[12, 17, 7, 17, 23, 18, 38]]
+  },
+  options: {
+    lineSmooth: Chartist.Interpolation.cardinal({
+      tension: 0
+    }),
+    low: 0,
+    high: 50, 
+    chartPadding: {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0
+    }
+  }
+#layout 12/4 = 3 cards
+<GridItem xs={12} sm={12} md={4}>
+<Card chart>
+	<CardHeader>
+		<ChartistGraph
+			className="ct-chart"
+            data={dailySalesChart.data}
+            type="Line"
+            options={dailySalesChart.options}
+            listener={dailySalesChart.animation}
+        />
+    </CardHeader>
+	<CardBody>
+	<CardFooter>
+	
+ Dashboard:
+<AppBar>
+	<Toolbar>
+		<IconButton>
+		<MenuIcon>
+		<IconButton>	<Badge>
+
+<Drawer>
+	click to close drawer:
+	<div className={classes.toolbarIcon}>
+              <IconButton onClick={this.handleDrawerClose}>
+                <ChevronLeftIcon />
+              </IconButton>
+    </div>
+define state:
+state = {
+		open:true,
+	};
+ handleDrawerClose = () => {
+    this.setState({ open: false });
+  };
+## list in drawer on left side:
+<Divider />
+  <List>{mainListItems}</List>
+<Divider />  
+#list 	
+	<ListItem button>
+      <ListItemIcon>
+        <BarChartIcon />
+      </ListItemIcon>
+      <ListItemText primary="Reports" />
+    </ListItem>
+	
+	<ListItem button>
+      <ListItemIcon>
+        <PeopleIcon />
+      </ListItemIcon>
+      <ListItemText primary="Customers" />
+    </ListItem>
+#main area
+	
+	<Typography component="div" className={classes.chartContainer}>
+              <SimpleLineChart />
+    </Typography>
+	
+	<div className={classes.tableContainer}>
+              <SimpleTable />
+    </div>
+
+## simple table:
+1. style
+const styles = {
+  root: {
+    width: '100%',
+    overflowX: 'auto',
+  },
+  table: {
+    minWidth: 700,
+  },
+};
+2. data
+const data = [
+{},
+{},
+];
+3. table
+pass in style class as props
+const {classes} = props;
+<Table className={clases.table}>	
+#table header:
+<TableHead>
+          <TableRow>
+            <TableCell>Dessert (100g serving)</TableCell>
+            <TableCell numeric>Calories</TableCell>
+            <TableCell numeric>Fat (g)</TableCell>
+            <TableCell numeric>Carbs (g)</TableCell>
+            <TableCell numeric>Protein (g)</TableCell>
+          </TableRow>
+</TableHead>
+#table body maps the data array: use key
+<TableBody>
+	{data.map(n=> {
+		return (
+			<TableRow key ={n.id}>
+// table header cell:
+			<TableCell component="th" scope="row">{n.name}</TableCell>
+// table cell:
+		<TableCell numeric>{n.calories}</TableCell>	
+		);
+	})}
+
+
+# Album layout:
+1. top app bar:
+  <AppBar position="static" className={classes.appBar}>
+        <Toolbar>
+          <CameraIcon className={classes.icon} />
+          <Typography variant="title" color="inherit" noWrap>
+            Album layout
+          </Typography>
+        </Toolbar>
+      </AppBar>	
+2. main area:
+<div className={classes.heroUnit}>
+          <div className={classes.heroContent}>	  
+## grid container:
+<div className={classes.heroButtons}>
+              <Grid container spacing={16} justify="center">
+                <Grid item>
+                  <Button variant="contained" color="primary">
+                    Main call to action
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button variant="outlined" color="primary">
+                    Secondary action
+                  </Button>
+                </Grid>
+              </Grid>
+            </div>
+3. footer:
+<footer className={classes.footer}>
+        <Typography variant="title" align="center" gutterBottom>
+          Footer
+        </Typography>
+        <Typography variant="subheading" align="center" color="textSecondary" component="p">
+          Something here to give the footer a purpose!
+        </Typography>
+      </footer>
+
+#Pricing:
+footer:
+const footers = [
+  {
+    title: 'Company',
+    description: ['Team', 'History', 'Contact us', 'Loctions'],
+  },
+  {
+    title: 'Features',
+    description: ['Cool stuff', 'Random feature', 'Team feature', 'Developer stuff', 'Another one'],
+  },
+  {
+    title: 'Resources',
+    description: ['Resource', 'Resource name', 'Another resource', 'Final resource'],
+  },
+  {
+    title: 'Legal',
+    description: ['Privacy policy', 'Terms of use'],
+  },
+];  
+#map the data in array:
+<footer className={classNames(classes.footer, classes.layout)}>
+        <Grid container spacing={32} justify="space-evenly">
+          {footers.map(footer => (
+            <Grid item xs key={footer.title}>
+              <Typography variant="title" color="textPrimary" gutterBottom>
+                {footer.title}
+              </Typography>
+              {footer.description.map(item => (
+                <Typography key={item} variant="subheading" color="textSecondary">
+                  {item}
+                </Typography>
+              ))}
+            </Grid>
+          ))}
+        </Grid>
+      </footer>
+
+## Signin 
+     <main className={classes.layout}>
+        <Paper className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockIcon />
+          </Avatar>
+          <Typography variant="headline">Sign in</Typography>
+          <form className={classes.form}>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="email">Email Address</InputLabel>
+              <Input id="email" name="email" autoComplete="email" autoFocus />
+            </FormControl>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="password">Password</InputLabel>
+              <Input
+                name="password"
+                type="password"
+                id="password"
+                autoComplete="current-password"
+              />
+            </FormControl>
+            <Button
+              type="submit"
+              fullWidth
+              variant="raised"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign in
+            </Button>
+          </form>
+        </Paper>
+      </main>	  
+	

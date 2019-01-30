@@ -1,0 +1,85 @@
+Arrow Function:
+const log=message=>console.log(message)
+
+const schools=[
+"Yortown",
+"Washington",
+"wakefilld"
+]
+const wSchools = schools.filter(school =>school[0]==='W')
+
+remove item from array 
+const cutSchool = (cut, list) =>
+	list.filter(school => school!== cut)
+console.log(cutSchool("Washington", schools).join ("*");	
+
+# Map function
+const highSchools = schools.map(school=>`${school} High School`)
+return object:
+const highSchools = schools.map(school=>(name: school })
+[
+{ name: "Yortown"},
+{name: "washington"},
+]
+
+
+#use Object.keys return of array of keys from an object
+
+#tranform array boject into object:
+const schools = {
+	"Yorktown": 10,
+	"Washington & Lee": 2,
+	"Wakefield": 5
+}
+const schoolArray = Object.keys(schools).map(key =>
+	({
+		name:key,
+		wins:schools[key]
+		})
+	)
+	
+### pass data between components:
+[
+	{ "Name": "Baked Salmon",
+		"Ingredients" : [
+			{"name":"Salmon", "amount":1, "measurement": "lb"},
+			{ "name": "Pine Nuts", "amount": 1, "measurement": "cup" }
+		],
+		"steps" : [
+			"Preheat the oven to 350 degrees.",
+            "Spread the olive oil around a glass baking dish."
+		]
+	},
+	...
+]
+1. menu: index.js
+<Menu recipes={data} />
+2. menu.js
+const Menu=({recipes}) =>
+	{recipes.map((recipe, i) =>
+		<Recipe key={i} {..recipe} />)
+	}
+3. 	Recipes.js
+const Recipe = ( {name, ingredients, steps }) =>
+	<IngreidentsList listt={ingredients}/>
+	<Instructions title="Instructions" steps={steps} />
+4. instructions.js
+const Instructions = ({title, steps}) =>
+	{steps.map((s,i)=>
+		<p key={i}> {s}</p>
+	)}
+
+	
+##  Props validations
+propTypes: {
+ingredients: PropTypes.array.isRequired,
+steps: PropTypes.array.isRequired,
+
+title: (props, propName) =>
+(typeof props[propName] !== 'string') ?
+new Error("A title must be a string") :
+(props[propName].length > 20) ?
+new Error(`title is over 20 characters`) :
+null
+}
+	

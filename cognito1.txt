@@ -1,0 +1,93 @@
+Step 1: Creating a User Pool for your JavaScript App by Using the Console
+
+
+Step 2: Creating a User Pool Object in Your App
+var poolData = {
+	UserPoolID: '..',
+	ClientID: '..'
+};
+var userPool = new AmazonCognitoIdentity.CognitoUserPool(poolData);
+var useData= {
+	UserName: '..',
+	Pool: userPool
+};
+
+	
+Step 3: Signing up Users for Your App
+After creating a user pool object, users can be signed up for the app. 
+The user's information can be collected through the web UI and used to populate CognitoUserAttribute objects 
+that are passed in the signUp call.
+var attributeList = [];
+var dataEmail = {
+	Name: 'email',
+	Value: '..'
+};
+var dataPhoneNumber = {
+	Name: 'phone_number',
+	Value:'  '
+};
+var attributeEmail =  new AmazonCognitoIdentity.CognitoUserAttribute(dataEmail);
+var attributePhoneNumber =  new AmazonCognitoIdentity.CognitoUserAttribute(dataPhoneNumber);
+attributeList.push(attributeEmail);
+attributeList.push(attributePhoneNumber);
+
+var cognitoUser;
+userPool.signUp('username', 'password', attributeList, null, function(err, result){
+    if (err) {
+        alert(err);
+        return;
+    }
+    cognitoUser = result.user;
+    console.log('user name is ' + cognitoUser.getUsername());
+});
+
+Step 4: Confirming Users for Your App
+After signing up, the user confirms the sign-up by entering a code sent either through SMS or email (based on the user pool settings). Alternatively, you can use a PreSignUp AWS Lambda function to automatically confirm your users. To confirm sign-up, you must collect the code ('123456' in the following example) received by the user and use it as follows.
+cognitoUser.confirmRegistration('123456', true, function(err, result) {
+    if (err) {
+        alert(err);
+        return;
+    }
+    console.log('call result: ' + result);
+});
+
+Step 5: Signing Users in to Your App
+var authenticationData = {
+        Username : '...', // your username here
+        Password : '...', // your password here
+    };
+var authenticationDetails =  new AmazonCognitoIdentity.AuthenticationDetails(authenticationData);
+var cognitoUser =  new AmazonCognitoIdentity.CognitoUser(userData);
+cognitoUser.authenticateUser(authenticationDetails, {
+        onSuccess: function (result) {
+            var accessToken = result.getAccessToken().getJwtToken();
+        },
+ 
+        onFailure: function(err) {
+            alert(err);
+        },
+        mfaRequired: function(codeDeliveryDetails) {
+            var verificationCode = prompt('Please input verification code' ,'');
+            cognitoUser.sendMFACode(verificationCode, this);
+        }
+    });
+
+Step 6: Getting User Details
+fter signing in, a user can perform authorized operations such as retrieving user attributes, verifying user attributes (such as an unverified email address), deleting user attributes, updating user attributes, changing the user password, and deleting the user account. 
+
+Step 7: Getting Credentials to Access AWS Resources for an App User
+If you want to work with other AWS services, you must first create an Amazon Cognito identity pool. After you create this identity pool, you can get AWS credentials by passing the identity pool ID and the ID token (which were obtained earlier) when signing in the user. The following example shows how to populate IdentityPoolId and pass the ID token through the Logins map.
+
+ AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: 'us-east-1:XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX',
+    Logins: {
+        'cognito-idp.us-east-1.amazonaws.com/us-east-1_XXXXXXXXX': 
+ result.getIdToken().getJwtToken()
+    }
+});
+ 
+AWS.config.credentials.get(function(err){
+    if (err) {
+        alert(err);
+    }
+});

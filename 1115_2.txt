@@ -1,0 +1,168 @@
+1. review all notes.
+2. remember details of code
+3. run all code and check each line of data
+4. find and analysis more examples
+5.
+
+
+# add new contact:
+handleNewContact(newContact) {
+	this.setState( (prevState)=> ({
+		contactList: [...prevState.contactList, newContact]
+		}), ()=>console.log(this.state.contactList)
+	)
+}
+
+##pass data between components
+parent to child via props
+
+child to parent use callback and states
+1. define state in parent oncstructor
+constructor(porps) {
+	super(props);
+	this.state = {
+		listDataFromChild: null;
+	}
+2. in child, pass the data to parent call
+someFunction = () => {
+	this.props.callbackFromParent(listInfo)
+}
+3.1 define call back 
+<TodoItem callbackFromParent={this.mycallback} />
+3.2 in Parent, implement function  to take data from child and process it
+mycallback = (dataFromCild) => {
+	this.setState({listDataFromChild: dataFromChild})
+}
+
+## fetch data into state
+1. define state in constructor
+this.state = {
+	hits:[],
+	isLoading:false,
+	error:null,
+};
+2. fetch 
+fetch(URL)
+	.then( response=>{
+		if(response.ok) {
+			return response.json();
+		else {
+			throw new Error("cannot fetch data");
+		}
+	}).then(data =>this.setState({hits:data.hits, isLoading:false}))
+	.catch( error=>this.setState({error, isLoanding:false}));
+
+## destructing data from state
+const {hits, isLoading, error} = this.state;
+## map array use key
+{hits.map( hit =>
+	<li key ={hit.id}>
+		<a href={hit.url}>{hit.title}</a>
+	</li>
+)}
+
+
+## use anonymous function 
+#parent:
+<AddColorForm onNewColor={addColor} />
+   addColor(title, color) {
+        this.setState(prevState => ({
+            colors: [
+                ...prevState.colors,
+                {
+                    id: v4(),
+                    title,
+                    color,
+                    rating: 0
+                }
+            ]
+        }))
+    }
+#child:	//pass in onNewColor
+const AddColorForm = ({onNewColor})=>{
+	const submit = (e) => {
+		onNewColor(title,color);
+	}
+	return (
+		<form onSubmit={submit}>
+		
+}
+###############
+#grandparent:
+<AddContact onSubmit={this.handleNewContact} />
+  handleNewContact(newContact) {
+    console.log("Hey00");
+    console.log(newContact);
+    this.setState(prevState => ({
+      contactList: [
+        ...prevState.contactList, newContact]
+    }), () => console.log(this.state.contactList))
+  }
+
+#parent:
+<AddContactForm onFormSubmit={this.handleSubmit} onInputChange={this.handleInputChange} />
+handleInputChange(event) {
+	const target = event.target;
+    	const value = target.value;
+    	const name = target.name;
+
+      this.setState(prevState => (
+        { 
+        	newContact: {
+        	 ...prevState.newContact, [name]: value 
+        	}
+        })
+      )}
+handleSubmit(e) {
+		e.preventDefault();
+		this.setState({isHidden:true});
+		this.props.onSubmit(this.state.newContact);
+}
+#child:	
+const addContactForm = ({onInputChange, onFomrSubmit}) => {
+	<form>
+		<input type="email" class="form-control" name="email" onChange={onInputChange} placeholder="name@example.com" />
+		<input type="number" class="form-control" name="phone" onChange={onInputChange} placeholder="+1 1234567890" />
+		<button type="submit" onClick={onFormSubmit} class="btn btn-primary"> Submit </button>
+	</form>
+}
+## use refs:	
+<input ref="emailAddress" className="form-control" type="text" placeholder="hi@azat.co"/>
+submit(event) {
+    let emailAddress = this.refs.emailAddress
+    let comments = this.refs.comments
+    console.log(ReactDOM.findDOMNode(emailAddress).value)
+    console.log(ReactDOM.findDOMNode(comments).value)
+  }
+
+## ES6 pass parameters:
+handleClick(param, e) {
+  console.log('Parameter', param);
+  console.log('Event', e);
+}
+  
+render() {
+  <button onClick={(e) => this.handleClick(param, e)}></button>
+}
+
+# arrow no extra param:
+handleClick(e) {  
+  console.log('Event', e);
+}
+  
+render() {
+  <button onClick={(e) => this.handleClick(e)}></button>
+ 
+no boilplate code:
+<button onClick={this.handleClick}>
+handleClick = () =>{
+	//this
+} 
+<input onChange={this.handleInput} />
+handleInput = (e) => {
+//this, e
+}
+<li onClick={this.handleRemove(item.id) }/>
+handleRemove = (id) =>(e)=> {
+	//this, id, e
+}

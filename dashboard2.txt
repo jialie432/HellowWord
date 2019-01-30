@@ -1,0 +1,125 @@
+1. add contact code
+2. routing in material ui dashboard
+3. components in MUI dashboard
+
+https://github.com/blizzerand/contact-list-react.git
+##Contact:
+1. show hide addContact form
+#define state: isHidde= true;
+display a button "add contact", initially
+when click, show "add contact form"
+
+{ this.state.isHidden === false ? this.renderForm() : <button onClick={this.showAddContactButton()}>Add Contact</button> }
+
+# AddContactForm pass in 2 props
+<AddContactForm onFormSubmit={this.handleSubmit} onInputChange={this.handleInputChange} />
+# create the form
+const AddContactForm = ( {onInputChange, onFormSubmit}) =>
+	(
+		<form>
+			<input type="email" class="form-control" name="email" onChange={onInputChange} placeholder="name@example.com" />
+			<input type="name" class="form-control" name="name" onChange={onInputChange} placeholder="Bob" />
+			<input type="number" class="form-control" name="phone" onChange={onInputChange} placeholder="+1 1234567890" />
+			<textarea className="form-control" name="address" onChange={onInputChange} rows="3"></textarea>
+			<button type="submit" onClick={onFormSubmit} class="btn btn-primary"> Submit </button>	
+		</form>
+	)
+# map the contactlist and display:
+	<ul id="contact-list>
+		{ this.returnContactList().map(
+			(contct) =>
+				<li key={contct.email}> <ContactCard contact={contact}/> </li>
+			)
+		}
+	</ul>
+	
+				
+#	how to log value passed in:
+	handleInputChange
+##handle multip form input 
+	1. define state:
+		this.state = {
+			isHidden: true,
+			newContact: {
+				name: '',
+				surname: '',
+				email: '',
+				address: '',
+				phone: ''
+			}
+		}
+	handleInputChange(e) {
+		const target = e.target;
+		const value = target.value;
+		const name = target.name;
+		this.setState( prevState => (
+			{
+				newContact: { ...prevState.newContact, [name]:value }
+			}), // add a callback to log
+			() => console.log(thi.state.newContact)
+		)
+	}
+ # handle form submission
+handleSubmit(e) {
+	e.preventDefault();
+	this.setState( {isHidden:true }); // hide the add new contact form
+	this.props.onSubmit(this.state.newContact); // call parent with new data
+}
+# in parent:
+<AddContact onSubmit= {this.handleNewContact} />
+handleNewContact(newContact){
+	this.setState( prevState => (
+			{ contactList: [ ...prevState.contactList, newContact]}
+		), 
+		()=>console.log(thi.state.contectList)
+	)
+}
+
+https://demos.creative-tim.com/material-dashboard-react/#/documentation/routing-system
+
+#use function in setState()
+setState( (prevState, currentProps) => {
+	console.log(prevState, currentProps)
+	return( {counter: prevState.counter+1});
+}
+## more example:
+1. define state:
+	class Toggle extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {isToggleOn: true};
+        this.handleClick = this.handleClick.bind(this);
+    }
+2	handleClick() {
+		this.setState( prevState => (
+			{ isToggleOn: !prevState.isToggleOn }
+			));
+	}
+3. 	more example: set state and then call parent method
+handleMonthChange = () => {
+	this.setState(
+		{ currentMonth: ++this.currentMonth},
+		()=>{this.props.getCalendarData(this.state.currentMonth)}
+	)
+}
+#### handle multip input in State
+this.state = {
+      // variables names are equal to form fields' names
+      isGoing: true,
+      numberOfGuests: 2
+    };
+
+ handleInputChange(event) {
+    const target = event.target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState({
+      /* ES6 computed property name syntax, equals to 
+       * var partialState = {}; partialState[name] = value;
+       * this.setState(partialState); */
+      [name]: value
+    });
+  }
+ <input name="isGoing" type="checkbox" checked={this.state.isGoing}  onChange={this.handleInputChange} />
+ <input name="numberOfGuests" type="number" value={this.state.numberOfGuests} onChange={this.handleInputChange} />	

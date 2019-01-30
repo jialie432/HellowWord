@@ -115,7 +115,8 @@ System.out.println(response);
 	input.put("body", json);
 #Integration test:
 curl -X POST https://b1i93b7wt0.execute-api.us-east-1.amazonaws.com/dev/products -d '{"name": "Product3", "price": 100.99}'
-	
+curl -X POST https://43bvezib52.execute-api.us-east-1.amazonaws.com/dev/products -d "{\"name\": \"Product1\", \"price\": 100.99}"
+  
 		
 #config, 
 define in yaml:

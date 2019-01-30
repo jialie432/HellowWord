@@ -1,0 +1,466 @@
+HachNews app
+
+thinkining in react:
+1. get raw data format
+2. create a mock screen
+3. break the UI into component hierarchy
+<Search>
+<Table>
+	<Sort table header>
+	<table rows > <delete Button>
+<Button > load more..	
+	
+4. build a static version in react
+5. identify the Minimal (but ocmplete) respresnetation of UI state
+searchTerm
+resultList
+sortKey
+
+
+6. identify where your state should live
+in parent:
+searchTerm, result 
+in Table:
+sortKey
+
+7. data flow: parent to child via property
+to <Table>:
+result list,
+to <Search>
+value={searchTerm}
+
+
+7. add inverse data flow
+# <Search> onChange, onSubmit
+in <Search> component:
+handleChange = (e) => {
+	this.props.onChange(e);
+}
+<input type="text"
+	value = {this.props.value}
+	onChange={this.handleChange}
+/>
+#in Parent:
+<Search 
+	value = {this.state.searchTerm}
+	onChange = {this.onSearchChange}
+>
+onSearchChange = (e) => {
+	this.setState({searchTerm: e.target.value});
+}
+
+# <Table> onDismiss
+in parent:
+<Table
+	list={list}
+	onDismiss = {this.onDismiss}/>
+in Table
+<Button 
+	onClick={()=>onDismiss(item.objectID)}
+>
+or 
+onDismiss = (id) => (e)=>{
+      this.props.onDismiss(id);
+}
+	
+<Button 
+	onClick={this.onDismiss(item.objectID)}
+>
+
+in Button
+<button onClick={this.props.onClick} >
+
+
+##change style css use className as props
+1. define css:
+.button-active {
+	border-radisu:0;
+	border-botton:2px solid #4333BC3
+}
+.button-inline {
+  border-width: 0;
+  background: transparent;
+  color: inherit;
+  text-align: inherit;
+  -webkit-font-smoothing: inherit;
+  padding: 0;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+2. pass in as className
+<button
+	onClick=...
+	className="button-inline"
+>
+3. change style based on value
+if active key, use active css:
+const sortClassName = classNames (
+	'button-oinline', { 'button-active':this.props.sortKey===this.props.activeKey}
+<button className={sortClassName} />
+	
+## No boilerplate code with arrow function
+// no binding needed
+class TodoApp extend React.component {
+	render() {
+		return (
+			<div>
+				<button onClick={this.handleClick}>
+					ADD
+				</button>
+				
+				<input onChange={this.handleInput} />
+				{
+					this.state.todos.map((item) => {
+						return (
+							<li onClick={this.handleRemove(item.id) }>
+								{item.text}
+							</li>
+						);
+					});
+				}
+			</div>
+		)
+	}
+	handleClick = () => {
+		//this
+	}
+	handleInput = (e) => {
+		// this, e
+	}
+	// have to pass e also. only id will not work:
+	handleRemove = (id) => (e) => {
+	// this, e, id
+	}
+	
+#ES6 pass parameters:
+render(){
+	<button onClick={this.handleClick('parameter')}></button>
+}
+handleClick =(parameter) =>(event) => {
+	console.log('event=', event);
+	console.log('parameter=',parameter);
+}
+
+#ES6 no extra parameter
+handleClick = (e) => {
+	console.log(e);
+}
+render() {
+	<button onClick={this.handleClick}></button>
+}
+
+#3 arrow function
+handleClick(param, e) {
+	 console.log('Parameter', param);
+  console.log('Event', e);
+}
+render() {
+	<button onClick={(e) => this.handleClick(param,e)}/> </button>
+}
+
+# arrow no extra param:
+handleClick(e) {  
+  console.log('Event', e);
+}
+  
+render() {
+  <button onClick={(e) => this.handleClick(e)}></button>
+}
+
+## No boilerplate code with arrow function
+
+<Table
+	list={list}
+	onDismiss = {this.onDismiss}
+/>
+onDismiss(id){
+	this.setState( {
+		result: {
+			...results,
+		[searchKey]: { hits: updatedHits, page }
+			}
+	});
+}
+
+in Table.js
+ <Button
+    onClick={() => onDismiss(item.objectID)}
+    className="button-inline"
+ >
+
+<Button
+	onClick={this.onDismiss}
+/>
+
+in Button
+<button onClick={onClick}
+
+-----ES6 arrow funciton:
+handleClick(e) {
+	console.log('event=',e);
+{
+render() { // pass aditional param
+	<button onClick={(e)=>this.handleclick(param, e)}></button>
+}
+
+//recommend use property initializr syntax:
+handleClick=(e) => {
+	console.log(e);
+}
+render() {
+	<button onClick={this.handleClick}></button>
+}
+==== pass parameter use 'param'
+handleClick = (param) => (e) => { 
+  console.log('Event', e);
+  console.log('Parameter', param);
+}
+
+render() {
+  <button onClick={this.handleClick('Parameter')}></button>
+}
+thinkining in react:
+1. get raw data format
+2. create a mock screen
+3. break the UI into component hierarchy
+4. build a static version in react
+5. identify the Minimal (but ocmplete) respresnetation of UI state
+6. identify where your state should live
+7. add inverse data flow
+
+
+1. data format:
+json array
+{category: "Sporting Goods", price: "$49.99", stocked: true, name: "Football"}
+3. draw box on each component
+single responsibility principle. one componet does one thing.
+map data to UI
+create component hierachy:
+# whole app
+# search bar
+# product table
+	# category row
+	# product row
+	
+5. #if passed in from parent, not a state
+	# remain unchanged over time, not state
+	# can it be computed? not state
+search text and checkbox are states
+	
+6. where state should live?
+which component owns the state and mutate the state?
+
+# prdocut table need filter based state
+# status bar needs display search text and checkbox state
+# move the state to parent FilterableProductTable
+
+pass the state to child as props
+
+7 add invese data flow
+from searchbox -> filterableproducttable -> producttable
+
+# state in parent
+this.state={ inStockOnly:false}
+#parent handler change state
+handleInStockChange(inStockOnly){ // value from child event.target.checked
+        this.setState({
+            inStockOnly:inStockOnly
+        });
+    }
+#pass parent handler to child as props to child
+<SearchBar 
+  onInStockOnly = {this.handleInStockChange}
+/>
+#child native onChange define child handler
+natvie html onChange -> invoke parent handler passed in from props with parameter from event.
+<input onChange={this.handleInstockChange}
+
+#child handler invoke parent handler from props.
+natvie html onChange -> invoke parent handler passed in from props with parameter from event.
+pass value from event to parent:
+ handleInStockChange(e){
+        this.props.onInStockOnly(e.target.checked);
+}
+
+## from checkbox state to product table,
+ products passed in from App.js parent
+<ProductTable 
+	products={this.props.products}
+	filterText = {this.state.filterText}
+	inStockOnly = {this.state.inStockOnly}
+/>
+HachNews app
+
+thinkining in react:
+1. get raw data format
+2. create a mock screen
+3. break the UI into component hierarchy
+<Search>
+<Table>
+	<Sort table header>
+	<table rows > <delete Button>
+<Button > load more..	
+	
+4. build a static version in react
+5. identify the Minimal (but ocmplete) respresnetation of UI state
+searchTerm
+resultList
+sortKey
+
+
+6. identify where your state should live
+in parent:
+searchTerm, result 
+in Table:
+sortKey
+
+7. data flow: parent to child via property
+to <Table>:
+result list,
+to <Search>
+value={searchTerm}
+
+
+7. add inverse data flow
+# <Search> onChange, onSubmit
+in <Search> component:
+handleChange = (e) => {
+	this.props.onChange(e);
+}
+<input type="text"
+	value = {this.props.value}
+	onChange={this.handleChange}
+/>
+#in Parent:
+<Search 
+	value = {this.state.searchTerm}
+	onChange = {this.onSearchChange}
+>
+onSearchChange = (e) => {
+	this.setState({searchTerm: e.target.value});
+}
+
+# <Table> onDismiss
+in parent:
+<Table
+	list={list}
+	onDismiss = {this.onDismiss}/>
+in Table
+<Button 
+	onClick={()=>onDismiss(item.objectID)}
+>
+or 
+onDismiss = (id) => (e)=>{
+      this.props.onDismiss(id);
+}
+	
+<Button 
+	onClick={this.onDismiss(item.objectID)}
+>
+
+in Button
+<button onClick={this.props.onClick} >
+
+
+##change style css use className as props
+1. define css:
+.button-active {
+	border-radisu:0;
+	border-botton:2px solid #4333BC3
+}
+.button-inline {
+  border-width: 0;
+  background: transparent;
+  color: inherit;
+  text-align: inherit;
+  -webkit-font-smoothing: inherit;
+  padding: 0;
+  font-size: inherit;
+  cursor: pointer;
+}
+
+2. pass in as className
+<button
+	onClick=...
+	className="button-inline"
+>
+3. change style based on value
+if active key, use active css:
+const sortClassName = classNames (
+	'button-oinline', { 'button-active':this.props.sortKey===this.props.activeKey}
+<button className={sortClassName} />
+	
+---------
+MUI-fitness app:
+1. component tree:
+<form><TextField> <Button>
+<List> <IconButton delete>
+2. state:
+exercise array,
+title
+
+3. data flow
+<TextField> : value
+<List> exercise array
+
+4. event handler: 
+# textfield: handleChange
+onChange={this.handleChange}
+handleChange = (e) => {
+	this.setState( {
+		[e.target.name]:e.target.value,
+		})
+}
+#<form onSubmit={this.handleCreate}>
+handleCreate = (e) => {
+	e.preventDefault();
+	//merge state: exercise
+	this.setState( ( {exercises, title}) => ({
+		exercises:[
+			...exercises,
+			{title, id:Date.now()}
+		],
+		title:''
+		})
+	)
+}
+## pass parameter <IconButton delete
+onClick={this.handleDelete(id)}
+handleDelete= (id)=>(e)=>{
+	this.setState( ({exercise})=> ( {
+		exercises: exercise.filter(ex => ex.id!== id)
+		})
+	)
+}
+		
+	
+
+
+### javascript property
+use [] for computed properties
+let fruit=e.target.name
+let state={
+	[fruit]:e.target.value,
+}
+console.log(state[fruit]
+#check existence:
+let user={}
+alert (user.noSuchProperty === undefined_;
+
+let user={name:"John", age: 30}
+alert("age" in user) //true
+
+let user = {
+  name: "John",
+  age: 30,
+  isAdmin: true
+};
+
+for(let key in user) {
+  // keys
+  alert( key );  // name, age, isAdmin
+  // values for the keys
+  alert( user[key] ); // John, 30, true
+}
+		

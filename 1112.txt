@@ -1,0 +1,79 @@
+https://moduscreate.com/blog/ext-js-to-react-load-sort-and-filter-data-with-react/
+
+##react structure
+
+import React, {Component} from 'react'
+
+class Greeting extends Component {
+	render() {
+		return (
+			<div className ="Greeting">
+				Hello!
+			</div>
+		);
+	}
+}
+export default Greeting;
+
+## Map array: use array index id as key*--   -```
+{this.state.Allpeople.map((person,id) =><h1 key={id}> {person.name}</h1>)}
+
+## async await:
+ componentDidMount() {
+    fetch('http://api.open-notify.org/astros.json')
+      .then(response => response.json())
+      .then(({people}) => this.setState({ peopleInSpace: people }))
+
+  }
+
+ async componentDidMount() {
+    try {
+      const response = await fetch("http://api.open-notify.org/astros.json");
+      if (!response.ok) {
+        throw Error(response.statusText);
+      }
+      const json = await response.json();
+      console.log(json.people);
+      this.setState({ peopleInSpace: json.people })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+## list and key
+if no id as key available, use index of array
+const todoItems = todos.map((todo,index) =>
+	<li key= {index}> {todo.text}</li>
+);
+if array has key, use key:
+const todoItems = todos.map((todo) =>
+  <li key={todo.id}>
+    {todo.text}
+  </li>
+);
+
+##handle form submission
+App.js
+<LoginForm onSubmit={this.submitLogin} />
+submitLogin = ({username, password})=>{ // pass state object with username and password
+	console.log("login as");
+};
+#LoginForm.js
+this.state = {
+      username: '',
+      password: ''
+    };
+<form onSubmit={this.handleSubmit}>
+	<input id="username" name="username" type="text" onChange={this.handleChange} />
+	<input id="password" name="password" type="password" onChange={this.handleChange} />
+</form>
+handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    })
+  }
+ handleSubmit = (event) => {
+    event.preventDefault()
+    if (!this.state.username || !this.state.password) return
+    this.props.onSubmit(this.state)
+  }  
